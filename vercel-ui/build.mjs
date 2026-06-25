@@ -6,6 +6,16 @@ const uiRoot = dirname(fileURLToPath(import.meta.url));
 const repoRoot = join(uiRoot, "..");
 const srcRoot = join(uiRoot, "src");
 const distRoot = join(uiRoot, "dist");
+const staticAssets = [
+  {
+    from: join(repoRoot, "public", "images", "login-logo.svg"),
+    to: join(distRoot, "assets", "openemr-logo.svg")
+  },
+  {
+    from: join(repoRoot, "public", "images", "favicon-32x32.png"),
+    to: join(distRoot, "favicon-32x32.png")
+  }
+];
 
 function normalizeBackendUrl(value) {
   const trimmed = String(value || "").trim();
@@ -35,14 +45,11 @@ const config = {
 await rm(distRoot, { recursive: true, force: true });
 await mkdir(join(distRoot, "assets"), { recursive: true });
 await cp(srcRoot, distRoot, { recursive: true });
-await cp(
-  join(repoRoot, "public", "images", "login-logo.svg"),
-  join(distRoot, "assets", "openemr-logo.svg")
-);
-await cp(
-  join(repoRoot, "public", "images", "favicon-32x32.png"),
-  join(distRoot, "favicon-32x32.png")
-);
+
+for (const asset of staticAssets) {
+  await cp(asset.from, asset.to);
+}
+
 await writeFile(
   join(distRoot, "config.js"),
   `window.OPENEMR_VERCEL_UI_CONFIG = ${JSON.stringify(config, null, 2)};\n`

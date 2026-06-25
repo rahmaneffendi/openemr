@@ -1,16 +1,18 @@
 :root {
   color-scheme: light;
   --bg: #f7fafc;
+  --bg-panel: #fbfdfe;
+  --blue-soft: #e6f4f6;
+  --brand-grid: rgba(0, 127, 140, 0.08);
+  --green: #2c8a5a;
   --ink: #17202a;
-  --muted: #5c6670;
   --line: #d9e1e8;
+  --muted: #5c6670;
   --panel: #ffffff;
+  --red: #c82635;
+  --shadow: 0 20px 55px rgba(23, 32, 42, 0.12);
   --teal: #007f8c;
   --teal-dark: #005c66;
-  --red: #c82635;
-  --green: #2c8a5a;
-  --blue-soft: #e6f4f6;
-  --shadow: 0 20px 55px rgba(23, 32, 42, 0.12);
   font-family: Arial, Helvetica, sans-serif;
 }
 
@@ -60,7 +62,7 @@ a {
   padding: 42px;
   background:
     linear-gradient(180deg, rgba(230, 244, 246, 0.92), rgba(255, 255, 255, 0.96)),
-    repeating-linear-gradient(90deg, rgba(0, 127, 140, 0.08) 0 1px, transparent 1px 72px);
+    repeating-linear-gradient(90deg, var(--brand-grid) 0 1px, transparent 1px 72px);
 }
 
 .brand-logo {
@@ -142,7 +144,7 @@ h1 {
   border: 1px solid var(--line);
   border-left: 4px solid var(--teal);
   border-radius: 8px;
-  background: #fbfdfe;
+  background: var(--bg-panel);
 }
 
 .backend-label {
