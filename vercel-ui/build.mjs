@@ -24,6 +24,14 @@ const staticAssets = [
     to: join(distRoot, "assets", "small-logo-2.png")
   },
   {
+    from: join(repoRoot, "public", "images", "logos", "core", "menu", "primary", "logo.svg"),
+    to: join(distRoot, "assets", "menu-logo.svg")
+  },
+  {
+    from: join(repoRoot, "public", "images", "patient-picture-default.png"),
+    to: join(distRoot, "assets", "patient-picture-default.png")
+  },
+  {
     from: join(repoRoot, "public", "images", "logos", "core", "favicon", "favicon.ico"),
     to: join(distRoot, "favicon.ico")
   }
@@ -68,6 +76,4 @@ await writeFile(
 );
 
 console.log(`Built Vercel UI in ${distRoot}`);
-if (!config.backendUrl) {
-  console.log("Set OPENEMR_BACKEND_URL in Vercel to enable backend links.");
-}
+console.log("Static OpenEMR workflow prototype is ready for Vercel.");

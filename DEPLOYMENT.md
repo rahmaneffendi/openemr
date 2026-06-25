@@ -1,11 +1,11 @@
 # Deployment Guide
 
-Repo ini punya dua bagian deploy:
+Repo ini punya dua mode deploy:
 
-1. **Vercel UI**: frontend statis ringan yang ada di `vercel-ui/`.
-2. **OpenEMR backend**: aplikasi PHP + MariaDB yang harus berjalan di server/container terpisah.
+1. **Vercel UI prototype**: frontend statis yang ada di `vercel-ui/`. Mode ini bisa diklik dan dieksplor tanpa backend.
+2. **OpenEMR backend production**: aplikasi PHP + MariaDB yang harus berjalan di server/container terpisah jika ingin fitur klinis nyata.
 
-OpenEMR penuh tidak bisa dijalankan sebagai static site di Vercel karena halaman utamanya dirender oleh PHP dan membutuhkan database.
+OpenEMR penuh tidak bisa dijalankan sebagai static site di Vercel karena halaman utamanya dirender oleh PHP dan membutuhkan database. Karena itu Vercel build di repo ini adalah prototype frontend-only dengan data dummy.
 
 ## 1. Deploy Vercel UI
 
@@ -23,10 +23,9 @@ lalu mem-publish output:
 vercel-ui/dist
 ```
 
-Set environment variable di Vercel:
+Environment variable tidak wajib untuk prototype. Opsional:
 
 ```text
-OPENEMR_BACKEND_URL=https://domain-backend-openemr-anda.com
 OPENEMR_APP_NAME=OpenEMR
 ```
 
@@ -58,22 +57,15 @@ OE_PASS
 
 Jangan gunakan credential default `admin/pass`, `root`, atau `openemr/openemr` untuk public deployment.
 
-## 3. Hubungkan Vercel ke Backend
+## 3. Hubungkan ke Backend Nyata
 
-Set `OPENEMR_BACKEND_URL` di Vercel ke domain backend yang sudah online, misalnya:
+Jika nanti prototype mau diubah menjadi frontend yang bicara ke backend nyata, backend OpenEMR perlu online dulu. Domain backend contohnya:
 
 ```text
 https://openemr.example.com
 ```
 
-Setelah itu, Vercel UI akan menampilkan tombol ke:
-
-```text
-/
-/interface/login/login.php?site=default
-/portal/index.php
-/swagger/
-```
+Saat ini Vercel UI tidak memanggil backend; semua flow memakai state dan data dummy di browser.
 
 ## Checklist Production
 
@@ -81,5 +73,4 @@ Setelah itu, Vercel UI akan menampilkan tombol ke:
 - Credential default sudah diganti.
 - Volume database dan site OpenEMR dipersist.
 - Backup database disiapkan.
-- Domain backend sudah bisa diakses dari browser.
-- `OPENEMR_BACKEND_URL` di Vercel memakai domain backend yang benar.
+- Domain backend sudah bisa diakses dari browser jika mode production dipakai.

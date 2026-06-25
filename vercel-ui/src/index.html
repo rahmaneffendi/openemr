@@ -4,14 +4,15 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
-    <title>OpenEMR Login</title>
+    <title>OpenEMR</title>
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/styles.css">
+    <link rel="stylesheet" href="/app-shell.css">
     <script src="/config.js" defer></script>
     <script src="/app.js" defer></script>
   </head>
   <body>
-    <main class="vertical-band">
+    <main id="login-view" class="vertical-band">
       <section class="login-panel" aria-label="OpenEMR login">
         <div class="logo-row">
           <div class="primary-logo">
@@ -19,21 +20,21 @@
           </div>
         </div>
 
-        <form method="post" id="login_form" autocomplete="off" target="_top" name="login_form">
+        <form method="post" id="login_form" autocomplete="off" name="login_form">
           <input type="hidden" name="new_login_session_management" value="1">
           <input type="hidden" name="languageChoice" value="1">
 
           <div id="standard-auth-username" class="form-group row">
             <label for="authUser" class="sr-only col-form-label col-sm-4">Username</label>
             <div class="col">
-              <input type="text" class="form-control" id="authUser" name="authUser" placeholder="Username">
+              <input type="text" class="form-control" id="authUser" name="authUser" placeholder="Username" value="admin">
             </div>
           </div>
 
           <div id="standard-auth-password" class="form-group row">
             <label for="clearPass" class="sr-only col-form-label col-sm-4">Password</label>
             <div class="col input-group">
-              <input type="password" class="form-control" id="clearPass" name="clearPass" placeholder="Password">
+              <input type="password" class="form-control" id="clearPass" name="clearPass" placeholder="Password" value="pass">
               <div class="input-group-append">
                 <button class="input-group-text password-toggle" id="password-toggle" type="button" aria-label="Show password">Show</button>
               </div>
@@ -45,6 +46,7 @@
             <div class="col">
               <select class="form-control" id="language" name="languageChoice" size="1">
                 <option value="1" selected>Default - English</option>
+                <option value="2">Bahasa Indonesia</option>
               </select>
             </div>
           </div>
@@ -54,9 +56,7 @@
           </div>
         </form>
 
-        <p class="backend-message" id="backend-message">
-          Set OPENEMR_BACKEND_URL in Vercel to connect this login page.
-        </p>
+        <p class="backend-message">Frontend demo mode. Login opens the static OpenEMR workflow prototype.</p>
 
         <div class="small-logos-container" aria-hidden="true">
           <img src="/assets/small-logo-1.png" alt="">
@@ -64,5 +64,62 @@
         </div>
       </section>
     </main>
+
+    <div id="app-view" class="openemr-shell is-hidden">
+      <nav class="navbar navbar-expand-xl navbar-light bg-light py-0">
+        <span class="navbar-brand">
+          <img src="/assets/menu-logo.svg" class="d-inline-block align-middle" height="16" alt="Main Menu Logo">
+        </span>
+        <button class="navbar-toggler" id="menu-toggle" type="button" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="mainMenu">
+          <div class="appMenu navbar-nav mr-auto" id="main-menu"></div>
+        </div>
+        <form class="form-inline" id="global-search-form">
+          <div class="input-group">
+            <input type="text" id="anySearchBox" class="form-control-sm form-control" placeholder="Search by any demographics" autocomplete="off">
+            <div class="input-group-append">
+              <button type="submit" id="search_globals" class="btn btn-sm btn-secondary" title="Search for patient by entering whole or part of any demographics field information">Search</button>
+            </div>
+          </div>
+        </form>
+        <span id="userData">
+          <button class="btn btn-sm btn-link" type="button" data-action="open-tab" data-view="messages">Messages</button>
+          <span class="user-name">Administrator</span>
+          <button class="btn btn-sm btn-outline-secondary" id="logout-button" type="button">Logout</button>
+        </span>
+      </nav>
+
+      <section id="attendantData" class="body_title acck">
+        <div class="patient-strip">
+          <button class="patient-caret" id="patient-caret" title="Toggle the Patient Panel" type="button">▲</button>
+          <img src="/assets/patient-picture-default.png" alt="" class="patient-photo">
+          <div class="patient-summary">
+            <a href="#" class="ptName" data-action="select-patient" data-patient="jane">Jane Sample</a>
+            <span>DOB: 1984-04-16</span>
+            <span>Age: 42</span>
+            <span>PID: 1001</span>
+          </div>
+          <div class="patient-actions">
+            <button class="btn btn-sm btn-primary" data-action="open-tab" data-view="patient-summary">Dashboard</button>
+            <button class="btn btn-sm btn-secondary" data-action="open-tab" data-view="encounter">Encounter</button>
+            <button class="btn btn-sm btn-secondary" data-action="open-tab" data-view="documents">Documents</button>
+            <button class="btn btn-sm btn-link" id="clear-patient" type="button">Close Patient Chart</button>
+          </div>
+        </div>
+      </section>
+
+      <div class="body_title pt-1" id="tabs_div">
+        <div class="tabControls" id="tabs"></div>
+      </div>
+
+      <div class="mainFrames d-flex flex-row" id="mainFrames_div">
+        <div id="framesDisplay">
+          <section class="frameDisplay" id="content"></section>
+        </div>
+      </div>
+      <div id="versionFooter" class="text-muted">demo-static</div>
+    </div>
   </body>
 </html>

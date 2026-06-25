@@ -24,8 +24,18 @@ body {
   background: #ffffff;
   color: var(--text);
   font-size: 1rem;
-  font-weight: 400;
   line-height: 1.5;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+
+.is-hidden {
+  display: none !important;
 }
 
 .vertical-band {
@@ -48,10 +58,6 @@ body {
   align-items: center;
   justify-content: space-between;
   margin-bottom: 3rem;
-}
-
-.primary-logo {
-  flex: 1 1 auto;
 }
 
 .primary-logo img {
@@ -86,7 +92,6 @@ body {
   padding-top: calc(0.375rem + 1px);
   padding-bottom: calc(0.375rem + 1px);
   margin-bottom: 0;
-  font-size: inherit;
   line-height: 1.5;
 }
 
@@ -108,19 +113,27 @@ body {
   border: 1px solid var(--border);
   border-radius: 0.25rem;
   background-color: #ffffff;
-  background-clip: padding-box;
   color: #495057;
   font-size: 1rem;
-  font-weight: 400;
   line-height: 1.5;
-  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+textarea.form-control {
+  min-height: 92px;
+  height: auto;
+  resize: vertical;
 }
 
 .form-control:focus {
   border-color: #80bdff;
   box-shadow: 0 0 0 0.2rem var(--focus);
-  color: #495057;
   outline: 0;
+}
+
+.form-control-sm {
+  height: calc(1.5em + 0.5rem + 2px);
+  padding: 0.25rem 0.5rem;
+  font-size: 0.875rem;
 }
 
 .input-group {
@@ -131,7 +144,6 @@ body {
 }
 
 .input-group > .form-control {
-  position: relative;
   width: 1%;
   min-width: 0;
   flex: 1 1 auto;
@@ -152,10 +164,7 @@ body {
   border-radius: 0 0.25rem 0.25rem 0;
   background-color: #e9ecef;
   color: #495057;
-  font-size: 1rem;
-  font-weight: 400;
   line-height: 1.5;
-  text-align: center;
   white-space: nowrap;
 }
 
@@ -180,13 +189,18 @@ body {
   padding: 0.375rem 0.75rem;
   border: 1px solid transparent;
   border-radius: 0.25rem;
+  background: transparent;
   font-size: 1rem;
-  font-weight: 400;
   line-height: 1.5;
   text-align: center;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out;
+  cursor: pointer;
   user-select: none;
-  vertical-align: middle;
+}
+
+.btn-sm {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.2rem;
+  font-size: 0.875rem;
 }
 
 .btn-primary {
@@ -195,14 +209,35 @@ body {
   color: #ffffff;
 }
 
-.btn-primary:hover:not(:disabled) {
+.btn-primary:hover {
   border-color: var(--blue-hover);
   background-color: var(--blue-hover);
 }
 
-.btn:disabled {
-  cursor: not-allowed;
-  opacity: 0.65;
+.btn-secondary {
+  border-color: #6c757d;
+  background-color: #6c757d;
+  color: #ffffff;
+}
+
+.btn-success {
+  border-color: #28a745;
+  background-color: #28a745;
+  color: #ffffff;
+}
+
+.btn-link,
+.link-button {
+  border: 0;
+  background: transparent;
+  color: #007bff;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.btn-outline-secondary {
+  border-color: #6c757d;
+  color: #6c757d;
 }
 
 .backend-message {
