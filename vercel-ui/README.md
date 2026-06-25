@@ -1,6 +1,6 @@
 # OpenEMR Vercel UI
 
-Folder ini berisi frontend statis yang aman untuk Vercel. Tampilannya meniru OpenEMR dari login sampai shell utama, menu, tab, patient dashboard, calendar, reports, admin, dan flow dummy lain tanpa backend.
+Folder ini berisi frontend statis yang aman untuk Vercel. Tampilannya adalah modern redesign dari flow OpenEMR: login, dashboard, calendar, patient chart, encounter, documents, billing, reports, admin, dan message center dengan data dummy tanpa backend.
 
 Lihat juga panduan root repo di `DEPLOYMENT.md`.
 
