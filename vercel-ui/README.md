@@ -1,6 +1,6 @@
 # OpenEMR Vercel UI
 
-Folder ini berisi frontend statis yang aman untuk Vercel. OpenEMR penuh tetap perlu backend PHP, database, dan web server sendiri.
+Folder ini berisi frontend statis yang aman untuk Vercel. Tampilannya meniru login bawaan OpenEMR, tetapi proses login tetap dikirim ke backend OpenEMR yang berjalan di server PHP terpisah.
 
 Lihat juga panduan root repo di `DEPLOYMENT.md`.
 

@@ -1,39 +1,28 @@
 (function () {
-  const DEFAULT_APP_NAME = "OpenEMR";
-  const DEFAULT_ENVIRONMENT = "local";
   const MESSAGES = {
-    configured: "Frontend ini berjalan di Vercel; proses login dan data klinis tetap lewat backend OpenEMR.",
-    missingBackend: "Set env OPENEMR_BACKEND_URL di Vercel, misalnya https://openemr.example.com."
+    configured: "Connected to OpenEMR backend.",
+    missingBackend: "Set OPENEMR_BACKEND_URL in Vercel to connect this login page."
   };
-  const ROUTES = [
-    { id: "open-main", path: "" },
-    { id: "open-login", path: "/interface/login/login.php?site=default" },
-    { id: "open-portal", path: "/portal/index.php" },
-    { id: "open-api", path: "/swagger/" }
-  ];
 
   const config = window.OPENEMR_VERCEL_UI_CONFIG || {};
   const backendUrl = cleanUrl(config.backendUrl);
-  const appName = config.appName || DEFAULT_APP_NAME;
-  const deploymentEnvironment = config.deploymentEnvironment || DEFAULT_ENVIRONMENT;
-
   const nodes = {
-    appTitle: getNode("app-title"),
-    environmentPill: getNode("environment-pill"),
-    deploymentStatus: getNode("deployment-status"),
-    backendUrl: getNode("backend-url"),
-    helperCopy: getNode("helper-copy")
+    form: getNode("login_form"),
+    message: getNode("backend-message"),
+    password: getNode("clearPass"),
+    passwordToggle: getNode("password-toggle"),
+    loginButton: getNode("login-button")
   };
 
-  nodes.appTitle.textContent = `${appName} UI`;
-  nodes.environmentPill.textContent = deploymentEnvironment;
-  nodes.deploymentStatus.textContent = backendUrl ? "Vercel UI connected" : "Vercel UI";
-  nodes.backendUrl.textContent = backendUrl || "Belum dikonfigurasi";
-  nodes.helperCopy.textContent = backendUrl ? MESSAGES.configured : MESSAGES.missingBackend;
-
   if (backendUrl) {
-    ROUTES.forEach((route) => enableLink(route.id, backendUrl + route.path));
+    nodes.form.action = `${backendUrl}/interface/main/main_screen.php?auth=login&site=default`;
+    nodes.message.textContent = MESSAGES.configured;
+  } else {
+    nodes.loginButton.disabled = true;
+    nodes.message.textContent = MESSAGES.missingBackend;
   }
+
+  nodes.passwordToggle.addEventListener("click", togglePassword);
 
   function cleanUrl(value) {
     return String(value || "").replace(/\/+$/, "");
@@ -47,10 +36,10 @@
     return node;
   }
 
-  function enableLink(id, href) {
-    const link = getNode(id);
-    link.href = href;
-    link.classList.remove("disabled");
-    link.removeAttribute("aria-disabled");
+  function togglePassword() {
+    const isPassword = nodes.password.type === "password";
+    nodes.password.type = isPassword ? "text" : "password";
+    nodes.passwordToggle.textContent = isPassword ? "Hide" : "Show";
+    nodes.passwordToggle.setAttribute("aria-label", isPassword ? "Hide password" : "Show password");
   }
 })();

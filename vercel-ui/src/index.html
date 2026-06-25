@@ -1,50 +1,66 @@
 <!doctype html>
-<html lang="id">
+<html lang="en">
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
-    <title>OpenEMR UI</title>
-    <link rel="icon" type="image/png" href="/favicon-32x32.png">
+    <title>OpenEMR Login</title>
+    <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/styles.css">
     <script src="/config.js" defer></script>
     <script src="/app.js" defer></script>
   </head>
   <body>
-    <main class="shell">
-      <section class="workspace" aria-labelledby="app-title">
-        <div class="brand-panel">
-          <img class="brand-logo" src="/assets/openemr-logo.svg" alt="OpenEMR">
-          <div class="status-strip" aria-label="Status deployment">
-            <span class="status-dot" aria-hidden="true"></span>
-            <span id="deployment-status">Vercel UI</span>
+    <main class="vertical-band">
+      <section class="login-panel" aria-label="OpenEMR login">
+        <div class="logo-row">
+          <div class="primary-logo">
+            <img src="/assets/login-primary-logo.png" alt="OpenEMR">
           </div>
         </div>
 
-        <div class="action-panel">
-          <div class="title-row">
-            <div>
-              <p class="eyebrow">Frontend deployment</p>
-              <h1 id="app-title">OpenEMR UI</h1>
+        <form method="post" id="login_form" autocomplete="off" target="_top" name="login_form">
+          <input type="hidden" name="new_login_session_management" value="1">
+          <input type="hidden" name="languageChoice" value="1">
+
+          <div id="standard-auth-username" class="form-group row">
+            <label for="authUser" class="sr-only col-form-label col-sm-4">Username</label>
+            <div class="col">
+              <input type="text" class="form-control" id="authUser" name="authUser" placeholder="Username">
             </div>
-            <span class="environment-pill" id="environment-pill">local</span>
           </div>
 
-          <div class="backend-box">
-            <span class="backend-label">Backend</span>
-            <strong id="backend-url">Belum dikonfigurasi</strong>
+          <div id="standard-auth-password" class="form-group row">
+            <label for="clearPass" class="sr-only col-form-label col-sm-4">Password</label>
+            <div class="col input-group">
+              <input type="password" class="form-control" id="clearPass" name="clearPass" placeholder="Password">
+              <div class="input-group-append">
+                <button class="input-group-text password-toggle" id="password-toggle" type="button" aria-label="Show password">Show</button>
+              </div>
+            </div>
           </div>
 
-          <div class="button-grid" aria-label="OpenEMR links">
-            <a class="primary-action disabled" id="open-main" href="#" aria-disabled="true">Buka OpenEMR</a>
-            <a class="secondary-action disabled" id="open-login" href="#" aria-disabled="true">Login Staff</a>
-            <a class="secondary-action disabled" id="open-portal" href="#" aria-disabled="true">Portal Pasien</a>
-            <a class="secondary-action disabled" id="open-api" href="#" aria-disabled="true">API Docs</a>
+          <div class="form-group row">
+            <label for="language" class="sr-only col-form-label col-sm-4">Language</label>
+            <div class="col">
+              <select class="form-control" id="language" name="languageChoice" size="1">
+                <option value="1" selected>Default - English</option>
+              </select>
+            </div>
           </div>
 
-          <p class="helper-copy" id="helper-copy">
-            Set env OPENEMR_BACKEND_URL di Vercel, misalnya https://openemr.example.com.
-          </p>
+          <div class="form-group d-flex justify-content-between">
+            <button id="login-button" class="btn btn-primary flex-fill" type="submit">Login</button>
+          </div>
+        </form>
+
+        <p class="backend-message" id="backend-message">
+          Set OPENEMR_BACKEND_URL in Vercel to connect this login page.
+        </p>
+
+        <div class="small-logos-container" aria-hidden="true">
+          <img src="/assets/small-logo-1.png" alt="">
+          <img src="/assets/small-logo-2.png" alt="">
         </div>
       </section>
     </main>

@@ -8,12 +8,24 @@ const srcRoot = join(uiRoot, "src");
 const distRoot = join(uiRoot, "dist");
 const staticAssets = [
   {
-    from: join(repoRoot, "public", "images", "login-logo.svg"),
-    to: join(distRoot, "assets", "openemr-logo.svg")
+    from: join(repoRoot, "public", "images", "logos", "core", "login", "primary", "logo.png"),
+    to: join(distRoot, "assets", "login-primary-logo.png")
   },
   {
-    from: join(repoRoot, "public", "images", "favicon-32x32.png"),
-    to: join(distRoot, "favicon-32x32.png")
+    from: join(repoRoot, "public", "images", "logos", "core", "login", "secondary", "logo.png"),
+    to: join(distRoot, "assets", "login-secondary-logo.png")
+  },
+  {
+    from: join(repoRoot, "public", "images", "logos", "core", "login", "small_logo_1", "logo.png"),
+    to: join(distRoot, "assets", "small-logo-1.png")
+  },
+  {
+    from: join(repoRoot, "public", "images", "logos", "core", "login", "small_logo_2", "logo.png"),
+    to: join(distRoot, "assets", "small-logo-2.png")
+  },
+  {
+    from: join(repoRoot, "public", "images", "logos", "core", "favicon", "favicon.ico"),
+    to: join(distRoot, "favicon.ico")
   }
 ];
 
