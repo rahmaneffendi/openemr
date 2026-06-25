@@ -2,6 +2,8 @@
 
 Folder ini berisi frontend statis yang aman untuk Vercel. OpenEMR penuh tetap perlu backend PHP, database, dan web server sendiri.
 
+Lihat juga panduan root repo di `DEPLOYMENT.md`.
+
 ## Deploy
 
 1. Import repository ini ke Vercel.
