@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="id">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex, nofollow">
+    <title>OpenEMR UI</title>
+    <link rel="icon" type="image/png" href="/favicon-32x32.png">
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/config.js" defer></script>
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <main class="shell">
+      <section class="workspace" aria-labelledby="app-title">
+        <div class="brand-panel">
+          <img class="brand-logo" src="/assets/openemr-logo.svg" alt="OpenEMR">
+          <div class="status-strip" aria-label="Status deployment">
+            <span class="status-dot" aria-hidden="true"></span>
+            <span id="deployment-status">Vercel UI</span>
+          </div>
+        </div>
+
+        <div class="action-panel">
+          <div class="title-row">
+            <div>
+              <p class="eyebrow">Frontend deployment</p>
+              <h1 id="app-title">OpenEMR UI</h1>
+            </div>
+            <span class="environment-pill" id="environment-pill">local</span>
+          </div>
+
+          <div class="backend-box">
+            <span class="backend-label">Backend</span>
+            <strong id="backend-url">Belum dikonfigurasi</strong>
+          </div>
+
+          <div class="button-grid" aria-label="OpenEMR links">
+            <a class="primary-action disabled" id="open-main" href="#" aria-disabled="true">Buka OpenEMR</a>
+            <a class="secondary-action disabled" id="open-login" href="#" aria-disabled="true">Login Staff</a>
+            <a class="secondary-action disabled" id="open-portal" href="#" aria-disabled="true">Portal Pasien</a>
+            <a class="secondary-action disabled" id="open-api" href="#" aria-disabled="true">API Docs</a>
+          </div>
+
+          <p class="helper-copy" id="helper-copy">
+            Set env OPENEMR_BACKEND_URL di Vercel, misalnya https://openemr.example.com.
+          </p>
+        </div>
+      </section>
+    </main>
+  </body>
+</html>
