@@ -4,7 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="noindex, nofollow">
-    <title>OpenEMR Modern Demo</title>
+    <meta name="description" content="Modern OpenEMR interface prototype for Vercel">
+    <title>OpenEMR Modern Workspace</title>
     <link rel="icon" href="/favicon.ico">
     <link rel="stylesheet" href="/styles.css">
     <link rel="stylesheet" href="/app-shell.css">
@@ -13,32 +14,55 @@
   </head>
   <body>
     <main id="login-view" class="login-screen">
-      <section class="login-card" aria-label="OpenEMR login">
-        <div class="login-brand">
-          <img src="/assets/login-primary-logo.png" alt="OpenEMR">
-          <p>Modern clinical workspace prototype</p>
-        </div>
-
-        <form method="post" id="login_form" autocomplete="off" name="login_form">
-          <label for="authUser">Username</label>
-          <input type="text" class="form-control" id="authUser" name="authUser" value="admin">
-
-          <label for="clearPass">Password</label>
-          <div class="input-group">
-            <input type="password" class="form-control" id="clearPass" name="clearPass" value="pass">
-            <button class="input-group-text password-toggle" id="password-toggle" type="button" aria-label="Show password">Show</button>
+      <section class="login-shell" aria-label="OpenEMR login">
+        <div class="login-card">
+          <div class="login-brand">
+            <img src="/assets/login-primary-logo.png" alt="OpenEMR">
+            <div>
+              <span class="eyebrow">Secure workspace</span>
+              <h1>Sign in to OpenEMR</h1>
+              <p>Clean clinical workflows for front desk, providers, and billing teams.</p>
+            </div>
           </div>
 
-          <label for="language">Language</label>
-          <select class="form-control" id="language" name="languageChoice">
-            <option selected>English</option>
-            <option>Bahasa Indonesia</option>
-          </select>
+          <form method="post" id="login_form" autocomplete="off" name="login_form">
+            <label for="authUser">Username</label>
+            <input type="text" class="form-control" id="authUser" name="authUser" value="admin" autocomplete="username">
 
-          <button id="login-button" class="btn btn-primary login-submit" type="submit">Sign in</button>
-        </form>
+            <label for="clearPass">Password</label>
+            <div class="input-group">
+              <input type="password" class="form-control" id="clearPass" name="clearPass" value="pass" autocomplete="current-password">
+              <button class="input-group-text password-toggle" id="password-toggle" type="button" aria-label="Show password">Show</button>
+            </div>
 
-        <p class="backend-message">Frontend-only demo. No backend or patient data is used.</p>
+            <label for="language">Language</label>
+            <select class="form-control" id="language" name="languageChoice">
+              <option selected>English</option>
+              <option>Bahasa Indonesia</option>
+            </select>
+
+            <button id="login-button" class="btn btn-primary login-submit" type="submit">Sign in</button>
+          </form>
+
+          <p class="backend-message">Frontend-only demo. No backend or patient data is used.</p>
+        </div>
+
+        <aside class="login-insight" aria-label="Clinic snapshot">
+          <div class="insight-top">
+            <span class="eyebrow">Today</span>
+            <strong>Clinic snapshot</strong>
+          </div>
+          <div class="insight-metrics">
+            <div><strong>24</strong><span>Visits</span></div>
+            <div><strong>8</strong><span>Checked in</span></div>
+            <div><strong>12</strong><span>Messages</span></div>
+          </div>
+          <ul class="queue-list">
+            <li><span>09:00</span><strong>Jane Sample</strong><em>Room 2</em></li>
+            <li><span>10:15</span><strong>John Appleseed</strong><em>Follow-up</em></li>
+            <li><span>13:30</span><strong>Care conference</strong><em>Telehealth</em></li>
+          </ul>
+        </aside>
       </section>
     </main>
 
