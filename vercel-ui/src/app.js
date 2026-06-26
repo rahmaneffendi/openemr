@@ -17,7 +17,6 @@
     ["admin", "Admin"],
     ["messages", "Inbox"]
   ];
-  const labels = Object.fromEntries([...navItems, ["encounter", "Encounter"], ["documents", "Documents"]]);
   const icons = {
     dashboard: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="7" height="8" rx="1.5"/><rect x="14" y="3" width="7" height="5" rx="1.5"/><rect x="14" y="12" width="7" height="9" rx="1.5"/><rect x="3" y="15" width="7" height="6" rx="1.5"/></svg>',
     calendar: '<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="4" width="18" height="17" rx="2"/><path d="M8 2v4M16 2v4M3 10h18"/></svg>',
@@ -37,7 +36,7 @@
     check: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m20 6-11 11-5-5"/></svg>',
     upload: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8 12 3 7 8M12 3v12"/></svg>'
   };
-  const state = { activeView: "dashboard", selectedPatient: "jane", tabs: ["dashboard", "calendar"] };
+  const state = { activeView: "dashboard", selectedPatient: "jane" };
   const loginView = getNode("login-view");
   const appView = getNode("app-view");
   const loginForm = getNode("login_form");
@@ -76,8 +75,7 @@
           <div class="user-chip"><span class="avatar">AD</span><span>Administrator</span></div>
           <button class="ghost-button icon-label logout-button" type="button" data-action="logout">${icons.logout}<span class="button-text">Logout</span></button>
         </header>
-        ${patientRibbon()}
-        <div class="tabs">${state.tabs.map((view) => `<button class="tab ${state.activeView === view ? "active" : ""}" type="button" data-action="go" data-view="${view}">${labels[view] || view}</button>`).join("")}</div>
+        ${state.activeView === "dashboard" ? "" : patientRibbon()}
         <main class="content" id="content">${viewMarkup(state.activeView)}</main>
       </section>`;
     appView.querySelector("#global-search-form").addEventListener("submit", function (event) {
@@ -114,7 +112,6 @@
 
   function go(view) {
     state.activeView = view;
-    if (!state.tabs.includes(view)) state.tabs.push(view);
     renderShell();
   }
 
@@ -148,7 +145,7 @@
   }
 
   function dashboardView() {
-    return `<section class="hero-panel"><div><span class="eyebrow">Clinic overview</span><h1>Today's workspace</h1><p>Appointments, patient flow, billing status, and clinical reminders stay visible without crowding the screen.</p></div><button class="btn btn-primary icon-label" data-action="go" data-view="calendar" type="button">${icons.calendar}<span>Open schedule</span></button></section><section class="metric-grid">${metric("Appointments", "24", "+6 today", icons.calendar)}${metric("Checked in", "8", "3 waiting", icons.patients)}${metric("Open claims", "17", "$8.4k", icons.billing)}${metric("Inbox", "12", "4 urgent", icons.messages)}</section><section class="chart-grid"><article class="panel chart-panel"><div class="panel-header"><div><h2>Visit volume</h2><span class="panel-subtitle">Weekly appointment trend</span></div><span class="status-pill">+18%</span></div>${visitTrendChart()}</article><article class="panel chart-panel"><div class="panel-header"><div><h2>Claims status</h2><span class="panel-subtitle">Current billing queue</span></div></div>${claimsDonutChart()}</article></section><section class="dashboard-grid"><article class="panel wide"><div class="panel-header"><h2>Today schedule</h2><button class="ghost-button icon-label" data-action="go" data-view="calendar" type="button">${icons.calendar}<span>View all</span></button></div>${appointmentList()}</article><article class="panel"><div class="panel-header"><h2>Care reminders</h2></div><ul class="clean-list"><li><strong>Jane Sample</strong><span>Lab follow-up due</span></li><li><strong>John Appleseed</strong><span>Annual wellness reminder</span></li><li><strong>Maria Garcia</strong><span>Portal message waiting</span></li></ul></article></section>`;
+    return `<section class="report-page"><div class="report-header"><div><h1>Electric Medical Report</h1><div class="breadcrumb"><span>Reports</span><span>Report Detail</span></div></div><div class="action-row"><button class="ghost-button icon-label" type="button">${icons.upload}<span>Download PDF</span></button><button class="btn btn-primary icon-label" type="button">${icons.messages}<span>Share Report</span></button></div></div>${reportPatientCard()}<section class="report-grid"><article class="panel ecg-panel"><div class="panel-header"><h2>ECG Overview</h2><div class="ecg-toolbar"><button class="ghost-button" type="button">Lead II</button><button class="ghost-button" type="button">25 mm/s</button><button class="icon-button" type="button" aria-label="Expand report">${icons.plus}</button></div></div>${ecgChart()}${ecgStats()}</article><article class="panel interpretation-card"><h2>Interpretation</h2><div class="success-banner">Normal Sinus Rhythm</div><p>No significant ST-T changes.</p><p>Normal ECG.</p><div class="review-block"><span>Reviewed by</span><strong>Dr. Michael Lee</strong><small>May 18, 2024 11:15 AM</small></div></article><article class="panel measurements-card"><h2>Measurements</h2>${measurementsTable()}</article><article class="panel summary-card"><h2>Report Summary</h2>${reportSummary()}</article></section><article class="panel previous-card"><div class="panel-header"><h2>Previous Reports</h2><button class="ghost-button" type="button">View All</button></div>${previousReports()}</article></section>`;
   }
 
   function calendarView() {
@@ -160,7 +157,7 @@
   }
 
   function patientChartView(patient) {
-    return `<div class="page-title"><div><span class="eyebrow">Chart</span><h1>${patient.name}</h1></div><button class="btn btn-primary icon-label" data-action="go" data-view="encounter" type="button">${icons.plus}<span>Create encounter</span></button></div><section class="metric-grid">${metric("Age", String(patient.age), "DOB " + patient.dob)}${metric("Provider", patient.provider, "Primary")}${metric("Balance", patient.balance, "Patient due")}${metric("Risk", patient.risk, "Care score")}</section><section class="dashboard-grid"><article class="panel"><h2>Problems</h2><ul class="clean-list"><li><strong>Hypertension</strong><span>Active</span></li><li><strong>Seasonal allergies</strong><span>Active</span></li></ul></article><article class="panel"><h2>Medications</h2><ul class="clean-list"><li><strong>Lisinopril 10mg</strong><span>Daily</span></li><li><strong>Vitamin D</strong><span>Weekly</span></li></ul></article><article class="panel wide"><h2>Recent encounters</h2><table class="data-table"><tbody><tr><td>2026-06-20</td><td>Office visit</td><td>Signed</td></tr><tr><td>2026-05-12</td><td>Follow-up</td><td>Reviewed</td></tr></tbody></table></article></section>`;
+    return `<section class="chart-page"><div class="page-title"><div><span class="eyebrow">Patient chart</span><h1>${patient.name}</h1></div><button class="btn btn-primary icon-label" data-action="go" data-view="encounter" type="button">${icons.plus}<span>Create encounter</span></button></div><article class="chart-summary-card"><div class="patient-avatar-lg">${patient.name.split(" ").map((part) => part[0]).join("")}</div><div><h2>${patient.name}</h2><span class="soft-pill">${patient.age} y/o · ${patient.risk} risk</span><dl><dt>Patient ID</dt><dd>${patient.pid}</dd><dt>Date of Birth</dt><dd>${patient.dob}</dd></dl></div><div class="chart-contact-grid"><div class="meta-item"><span class="meta-icon">${icons.patients}</span><div><small>Provider</small><strong>${patient.provider}</strong></div></div><div class="meta-item"><span class="meta-icon">${icons.messages}</span><div><small>Phone</small><strong>${patient.phone}</strong></div></div><div class="meta-item"><span class="meta-icon">${icons.billing}</span><div><small>Balance</small><strong>${patient.balance}</strong></div></div></div></article><section class="metric-grid">${metric("Age", String(patient.age), "DOB " + patient.dob, icons.calendar)}${metric("Provider", patient.provider, "Primary", icons.patients)}${metric("Balance", patient.balance, "Patient due", icons.billing)}${metric("Risk", patient.risk, "Care score", icons.reports)}</section><section class="chart-detail-grid"><article class="panel"><h2>Problems</h2><ul class="condition-list"><li><div><strong>Hypertension</strong><span>Active condition</span></div><em>Active</em></li><li><div><strong>Seasonal allergies</strong><span>Ongoing review</span></div><em>Active</em></li></ul></article><article class="panel"><h2>Medications</h2><ul class="condition-list"><li><div><strong>Lisinopril 10mg</strong><span>Once daily</span></div><em>Daily</em></li><li><div><strong>Vitamin D</strong><span>Supplement</span></div><em>Weekly</em></li></ul></article><article class="panel wide"><h2>Recent encounters</h2><table class="data-table"><tbody><tr><td>2026-06-20</td><td>Office visit</td><td><span class="status-pill">Signed</span></td></tr><tr><td>2026-05-12</td><td>Follow-up</td><td><span class="status-pill">Reviewed</span></td></tr></tbody></table></article></section></section>`;
   }
 
   function encounterView(patient) {
@@ -195,8 +192,38 @@
     return `<div class="donut-layout"><div class="donut-chart"><svg viewBox="0 0 120 120" role="img" aria-label="Claims status"><circle class="donut-track" cx="60" cy="60" r="44"/><circle class="donut-paid" cx="60" cy="60" r="44"/><circle class="donut-review" cx="60" cy="60" r="44"/></svg><strong>72%</strong><span>clean</span></div><ul class="legend-list"><li><span class="legend-dot paid"></span><strong>Clean claims</strong><small>72%</small></li><li><span class="legend-dot review"></span><strong>Needs review</strong><small>18%</small></li><li><span class="legend-dot denied"></span><strong>Denied</strong><small>10%</small></li></ul></div>`;
   }
 
+  function reportPatientCard() {
+    return `<article class="patient-report-card"><div class="report-person"><div class="patient-avatar-lg">JS</div><div><h2>John Smith</h2><span class="soft-pill">Male · 45 y/o</span><dl><dt>Patient ID</dt><dd>P-2024-05821</dd><dt>Date of Birth</dt><dd>Apr 12, 1979</dd></dl></div></div><div class="report-meta-grid"><div class="meta-item"><span class="meta-icon">${icons.reports}</span><div><small>Report Type</small><strong>ECG</strong></div></div><div class="meta-item"><span class="meta-icon">${icons.calendar}</span><div><small>Recorded On</small><strong>May 18, 2024 10:30 AM</strong></div></div><div class="meta-item"><span class="meta-icon">${icons.patients}</span><div><small>Recorded By</small><strong>Nurse Olivia</strong></div></div><div class="meta-item"><span class="meta-icon">${icons["patient-summary"]}</span><div><small>Referring Doctor</small><strong>Dr. Michael Lee</strong></div></div><div class="meta-item"><span class="meta-icon">${icons.documents}</span><div><small>Department</small><strong>Cardiology</strong></div></div><div class="meta-item"><span class="meta-icon">${icons.check}</span><div><small>Status</small><strong><span class="status-pill">Completed</span></strong></div></div></div></article>`;
+  }
+
+  function ecgChart() {
+    return `<div class="ecg-chart"><svg viewBox="0 0 720 220" role="img" aria-label="ECG waveform"><defs><pattern id="smallGrid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M10 0H0V10" fill="none" stroke="#eef2f7" stroke-width="1"/></pattern><pattern id="bigGrid" width="50" height="50" patternUnits="userSpaceOnUse"><rect width="50" height="50" fill="url(#smallGrid)"/><path d="M50 0H0V50" fill="none" stroke="#e5ebf3" stroke-width="1.2"/></pattern></defs><rect width="720" height="220" rx="8" fill="url(#bigGrid)"/><path d="M16 126H54l7-11 7 28 8-109 9 92 8 0 9-12 10 12h42l7-9 8 23 7-29 8 15h55l7-7 8 0 6-12 8 28 8-14h49l8-8 8 0 7-10 8 26 8-14h55l7-9 9 24 7-104 9 88 8 4 8-13 9 13h56l8-10 8 0 7-8 9 28 8-15h60l8-9 9 0 7-7 8 26 8-15h48" fill="none" stroke="#2f6df6" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`;
+  }
+
+  function ecgStats() {
+    const stats = [["Heart Rate", "72", "bpm"], ["PR Interval", "160", "ms"], ["QRS Duration", "92", "ms"], ["QT / QTc", "360 / 395", "ms"], ["P Axis", "56°", ""], ["QRS Axis", "34°", ""], ["T Axis", "48°", ""]];
+    return `<div class="ecg-metrics">${stats.map(([label, value, unit]) => `<div class="ecg-stat"><span>${label}</span><strong>${value}</strong><small>${unit}</small></div>`).join("")}</div>`;
+  }
+
+  function measurementsTable() {
+    const rows = [["Heart Rate", "72", "bpm", "60 - 100"], ["PR Interval", "160", "ms", "120 - 200"], ["QRS Duration", "92", "ms", "70 - 110"], ["QT Interval", "360", "ms", "300 - 440"], ["QTc (Bazett)", "395", "ms", "&lt; 440"]];
+    return `<table class="measure-table"><thead><tr><th>Measurement</th><th>Value</th><th>Unit</th><th>Reference Range</th><th>Status</th></tr></thead><tbody>${rows.map((row) => `<tr>${row.map((item) => `<td>${item}</td>`).join("")}<td><span class="normal-text">Normal</span></td></tr>`).join("")}</tbody></table>`;
+  }
+
+  function reportSummary() {
+    return `<dl class="summary-list"><dt>Indication</dt><dd>Routine Check-up</dd><dt>Symptoms</dt><dd>None</dd><dt>Medications</dt><dd>Amlodipine 5mg daily</dd><dt>Notes</dt><dd>Patient is stable. No immediate action required.</dd></dl>`;
+  }
+
+  function previousReports() {
+    return `<table class="previous-table"><thead><tr><th>Date</th><th>Report Type</th><th>Findings</th><th>Status</th><th>Actions</th></tr></thead><tbody><tr><td>Apr 20, 2024</td><td>ECG</td><td>Normal Sinus Rhythm</td><td><span class="status-pill">Completed</span></td><td>${icons.search}</td></tr><tr><td>Jan 15, 2024</td><td>ECG</td><td>Sinus Bradycardia</td><td><span class="status-pill">Completed</span></td><td>${icons.search}</td></tr><tr><td>Oct 10, 2023</td><td>ECG</td><td>Normal Sinus Rhythm</td><td><span class="status-pill">Completed</span></td><td>${icons.search}</td></tr></tbody></table>`;
+  }
+
   function appointmentList() {
-    return `<div class="timeline"><button type="button" data-action="select-patient" data-patient="jane"><span>09:00</span><strong>Jane Sample</strong><small>Office Visit</small></button><button type="button" data-action="select-patient" data-patient="john"><span>10:15</span><strong>John Appleseed</strong><small>Follow-up</small></button><button type="button"><span>13:30</span><strong>Care conference</strong><small>Telehealth</small></button></div>`;
+    return `<div class="timeline"><button type="button" data-action="select-patient" data-patient="jane"><span>09:00</span><strong>Jane Sample</strong><small>Room 2 · Office Visit</small></button><button type="button" data-action="select-patient" data-patient="john"><span>10:15</span><strong>John Appleseed</strong><small>Room 4 · Follow-up</small></button><button type="button"><span>13:30</span><strong>Care conference</strong><small>Telehealth · Team</small></button></div>`;
+  }
+
+  function clinicalSignal(label, value, detail, tone) {
+    return `<article class="signal-card ${tone}"><span>${label}</span><strong>${value}</strong><small>${detail}</small></article>`;
   }
 
   function metric(label, value, detail, icon) {
