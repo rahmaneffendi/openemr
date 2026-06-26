@@ -248,4 +248,42 @@
   }
 
   function dashboardFlowChart() {
-    const data = dashboardRangeData
+    const data = dashboardRangeData();
+    const max = Math.max(...data.values);
+    const points = data.values.map((value, index) => {
+      const x = 28 + index * (364 / (data.values.length - 1));
+      const y = 168 - (value / max) * 118;
+      return [Math.round(x), Math.round(y)];
+    });
+    const line = points.map(([x, y], index) => `${index === 0 ? "M" : "L"}${x} ${y}`).join(" ");
+    const area = `${line} L392 188 L28 188 Z`;
+    return `<div class="future-chart"><svg viewBox="0 0 420 210" role="img" aria-label="Interactive patient flow forecast"><path class="chart-grid-line" d="M28 168H392M28 128H392M28 88H392M28 48H392"/><path class="future-chart-area" d="${area}"/><path class="future-chart-line" d="${line}"/><g>${points.map(([x, y], index) => `<circle cx="${x}" cy="${y}" r="${index === points.length - 1 ? 5 : 4}"/>`).join("")}</g></svg><div class="chart-labels">${data.labels.map((label) => `<span>${label}</span>`).join("")}</div></div>`;
+  }
+
+  function metric(label, value, detail, icon) {
+    return `<article class="metric-card"><div class="metric-top"><span>${label}</span><span class="metric-icon">${icon || ""}</span></div><strong>${value}</strong><small>${detail}</small></article>`;
+  }
+
+  function emptyPatientView() {
+    return `<section class="empty-state"><h1>No patient selected</h1><p>Select a patient to explore chart workflows.</p><button class="btn btn-primary icon-label" type="button" data-action="go" data-view="patients">${icons.search}<span>Find patient</span></button></section>`;
+  }
+
+  function environmentLabel(value) {
+    if (value === "production") return "Production preview";
+    if (value === "preview") return "Preview deploy";
+    if (value === "development") return "Development";
+    return "Local build";
+  }
+
+  function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, function (match) {
+      return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[match];
+    });
+  }
+
+  function getNode(id) {
+    const node = document.getElementById(id);
+    if (!node) throw new Error("Missing required element: #" + id);
+    return node;
+  }
+})();
