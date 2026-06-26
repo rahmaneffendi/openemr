@@ -36,7 +36,7 @@
     check: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m20 6-11 11-5-5"/></svg>',
     upload: '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8 12 3 7 8M12 3v12"/></svg>'
   };
-  const state = { activeView: "dashboard", selectedPatient: "jane" };
+  const state = { activeView: "dashboard", selectedPatient: "jane", dashboardRange: "day" };
   const loginView = getNode("login-view");
   const appView = getNode("app-view");
   const loginForm = getNode("login_form");
@@ -75,7 +75,7 @@
           <div class="user-chip"><span class="avatar">AD</span><span>Administrator</span></div>
           <button class="ghost-button icon-label logout-button" type="button" data-action="logout">${icons.logout}<span class="button-text">Logout</span></button>
         </header>
-        ${state.activeView === "dashboard" ? "" : patientRibbon()}
+        ${["dashboard", "reports"].includes(state.activeView) ? "" : patientRibbon()}
         <main class="content" id="content">${viewMarkup(state.activeView)}</main>
       </section>`;
     appView.querySelector("#global-search-form").addEventListener("submit", function (event) {
@@ -105,6 +105,10 @@
     if (action === "logout") {
       appView.classList.add("is-hidden");
       loginView.classList.remove("is-hidden");
+    }
+    if (action === "set-dashboard-range") {
+      state.dashboardRange = target.dataset.range;
+      renderShell();
     }
     if (action === "toggle-menu") appView.classList.toggle("sidebar-open");
     appView.addEventListener("click", handleAppClick, { once: true });
@@ -145,7 +149,7 @@
   }
 
   function dashboardView() {
-    return `<section class="report-page"><div class="report-header"><div><h1>Electric Medical Report</h1><div class="breadcrumb"><span>Reports</span><span>Report Detail</span></div></div><div class="action-row"><button class="ghost-button icon-label" type="button">${icons.upload}<span>Download PDF</span></button><button class="btn btn-primary icon-label" type="button">${icons.messages}<span>Share Report</span></button></div></div>${reportPatientCard()}<section class="report-grid"><article class="panel ecg-panel"><div class="panel-header"><h2>ECG Overview</h2><div class="ecg-toolbar"><button class="ghost-button" type="button">Lead II</button><button class="ghost-button" type="button">25 mm/s</button><button class="icon-button" type="button" aria-label="Expand report">${icons.plus}</button></div></div>${ecgChart()}${ecgStats()}</article><article class="panel interpretation-card"><h2>Interpretation</h2><div class="success-banner">Normal Sinus Rhythm</div><p>No significant ST-T changes.</p><p>Normal ECG.</p><div class="review-block"><span>Reviewed by</span><strong>Dr. Michael Lee</strong><small>May 18, 2024 11:15 AM</small></div></article><article class="panel measurements-card"><h2>Measurements</h2>${measurementsTable()}</article><article class="panel summary-card"><h2>Report Summary</h2>${reportSummary()}</article></section><article class="panel previous-card"><div class="panel-header"><h2>Previous Reports</h2><button class="ghost-button" type="button">View All</button></div>${previousReports()}</article></section>`;
+    return `<section class="future-dashboard"><div class="future-hero"><div><span class="eyebrow">Clinical operations</span><h1>Care intelligence hub</h1><p>Live capacity, patient risk, appointments, and revenue signals in one blue-glass workspace.</p></div><div class="hero-orbit" aria-hidden="true"><span></span><strong>94%</strong><small>system flow</small></div></div><section class="dashboard-kpis">${futureKpi("Patient flow", "32", "+12% vs avg", icons.patients)}${futureKpi("Queue time", "14m", "-6m today", icons.calendar)}${futureKpi("Care gaps", "7", "3 high priority", icons.reports)}${futureKpi("Clean claims", "72%", "+8% week", icons.billing)}</section><section class="future-grid"><article class="panel command-chart"><div class="panel-header"><div><h2>Predictive patient flow</h2><span class="panel-subtitle">Interactive forecast by time window</span></div>${dashboardRangeControl()}</div>${dashboardFlowChart()}<div class="chart-insights"><span><strong>${dashboardRangeData().peak}</strong> projected peak</span><span><strong>${dashboardRangeData().capacity}</strong> capacity load</span><span><strong>${dashboardRangeData().risk}</strong> risk alerts</span></div></article><article class="panel ai-panel"><div class="panel-header"><div><h2>Clinical signals</h2><span class="panel-subtitle">Prioritized by urgency</span></div></div><ul class="ai-list"><li><span class="ai-score">91</span><div><strong>Lab follow-up ready</strong><small>Jane Sample needs provider review before 11:30.</small></div></li><li><span class="ai-score">76</span><div><strong>Schedule compression</strong><small>Room 2 likely runs 18 minutes late after 10:15.</small></div></li><li><span class="ai-score">64</span><div><strong>Billing review</strong><small>Two claims can be cleared with diagnosis confirmation.</small></div></li></ul></article><article class="panel flow-lane"><div class="panel-header"><h2>Today timeline</h2><button class="ghost-button icon-label" data-action="go" data-view="calendar" type="button">${icons.calendar}<span>Schedule</span></button></div><div class="lane-list"><button type="button" data-action="select-patient" data-patient="jane"><time>09:00</time><strong>Jane Sample</strong><span>Room 2 - Office visit</span></button><button type="button" data-action="select-patient" data-patient="john"><time>10:15</time><strong>John Appleseed</strong><span>Room 4 - Follow-up</span></button><button type="button"><time>13:30</time><strong>Care conference</strong><span>Telehealth - Team</span></button></div></article><article class="panel revenue-pulse"><div class="panel-header"><div><h2>Revenue pulse</h2><span class="panel-subtitle">Claims and payment health</span></div></div>${claimsDonutChart()}</article></section></section>`;
   }
 
   function calendarView() {
@@ -157,7 +161,7 @@
   }
 
   function patientChartView(patient) {
-    return `<section class="chart-page"><div class="page-title"><div><span class="eyebrow">Patient chart</span><h1>${patient.name}</h1></div><button class="btn btn-primary icon-label" data-action="go" data-view="encounter" type="button">${icons.plus}<span>Create encounter</span></button></div><article class="chart-summary-card"><div class="patient-avatar-lg">${patient.name.split(" ").map((part) => part[0]).join("")}</div><div><h2>${patient.name}</h2><span class="soft-pill">${patient.age} y/o · ${patient.risk} risk</span><dl><dt>Patient ID</dt><dd>${patient.pid}</dd><dt>Date of Birth</dt><dd>${patient.dob}</dd></dl></div><div class="chart-contact-grid"><div class="meta-item"><span class="meta-icon">${icons.patients}</span><div><small>Provider</small><strong>${patient.provider}</strong></div></div><div class="meta-item"><span class="meta-icon">${icons.messages}</span><div><small>Phone</small><strong>${patient.phone}</strong></div></div><div class="meta-item"><span class="meta-icon">${icons.billing}</span><div><small>Balance</small><strong>${patient.balance}</strong></div></div></div></article><section class="metric-grid">${metric("Age", String(patient.age), "DOB " + patient.dob, icons.calendar)}${metric("Provider", patient.provider, "Primary", icons.patients)}${metric("Balance", patient.balance, "Patient due", icons.billing)}${metric("Risk", patient.risk, "Care score", icons.reports)}</section><section class="chart-detail-grid"><article class="panel"><h2>Problems</h2><ul class="condition-list"><li><div><strong>Hypertension</strong><span>Active condition</span></div><em>Active</em></li><li><div><strong>Seasonal allergies</strong><span>Ongoing review</span></div><em>Active</em></li></ul></article><article class="panel"><h2>Medications</h2><ul class="condition-list"><li><div><strong>Lisinopril 10mg</strong><span>Once daily</span></div><em>Daily</em></li><li><div><strong>Vitamin D</strong><span>Supplement</span></div><em>Weekly</em></li></ul></article><article class="panel wide"><h2>Recent encounters</h2><table class="data-table"><tbody><tr><td>2026-06-20</td><td>Office visit</td><td><span class="status-pill">Signed</span></td></tr><tr><td>2026-05-12</td><td>Follow-up</td><td><span class="status-pill">Reviewed</span></td></tr></tbody></table></article></section></section>`;
+    return `<section class="chart-page"><div class="page-title"><div><span class="eyebrow">Patient chart</span><h1>${patient.name}</h1></div><button class="btn btn-primary icon-label" data-action="go" data-view="encounter" type="button">${icons.plus}<span>Create encounter</span></button></div><article class="chart-summary-card"><div class="patient-avatar-lg">${patient.name.split(" ").map((part) => part[0]).join("")}</div><div><h2>${patient.name}</h2><span class="soft-pill">${patient.age} y/o - ${patient.risk} risk</span><dl><dt>Patient ID</dt><dd>${patient.pid}</dd><dt>Date of Birth</dt><dd>${patient.dob}</dd></dl></div><div class="chart-contact-grid"><div class="meta-item"><span class="meta-icon">${icons.patients}</span><div><small>Provider</small><strong>${patient.provider}</strong></div></div><div class="meta-item"><span class="meta-icon">${icons.messages}</span><div><small>Phone</small><strong>${patient.phone}</strong></div></div><div class="meta-item"><span class="meta-icon">${icons.billing}</span><div><small>Balance</small><strong>${patient.balance}</strong></div></div></div></article><section class="metric-grid">${metric("Age", String(patient.age), "DOB " + patient.dob, icons.calendar)}${metric("Provider", patient.provider, "Primary", icons.patients)}${metric("Balance", patient.balance, "Patient due", icons.billing)}${metric("Risk", patient.risk, "Care score", icons.reports)}</section><section class="chart-detail-grid"><article class="panel"><h2>Problems</h2><ul class="condition-list"><li><div><strong>Hypertension</strong><span>Active condition</span></div><em>Active</em></li><li><div><strong>Seasonal allergies</strong><span>Ongoing review</span></div><em>Active</em></li></ul></article><article class="panel"><h2>Medications</h2><ul class="condition-list"><li><div><strong>Lisinopril 10mg</strong><span>Once daily</span></div><em>Daily</em></li><li><div><strong>Vitamin D</strong><span>Supplement</span></div><em>Weekly</em></li></ul></article><article class="panel wide"><h2>Recent encounters</h2><table class="data-table"><tbody><tr><td>2026-06-20</td><td>Office visit</td><td><span class="status-pill">Signed</span></td></tr><tr><td>2026-05-12</td><td>Follow-up</td><td><span class="status-pill">Reviewed</span></td></tr></tbody></table></article></section></section>`;
   }
 
   function encounterView(patient) {
@@ -173,7 +177,7 @@
   }
 
   function reportsView() {
-    return `<div class="page-title"><div><span class="eyebrow">Analytics</span><h1>Reports</h1></div><button class="btn btn-primary icon-label" type="button">${icons.reports}<span>Run report</span></button></div><section class="metric-grid">${metric("Visits", "248", "This month", icons.calendar)}${metric("Claims", "$48.2k", "Submitted", icons.billing)}${metric("Quality", "92%", "Care gaps closed", icons.reports)}</section><section class="panel"><table class="data-table"><thead><tr><th>Report</th><th>Owner</th><th>Last run</th></tr></thead><tbody><tr><td>Patient List</td><td>Admin</td><td>Today</td></tr><tr><td>Financial Summary</td><td>Billing</td><td>Yesterday</td></tr></tbody></table></section>`;
+    return `<section class="report-page"><div class="report-header"><div><h1>Electric Medical Report</h1><div class="breadcrumb"><span>Reports</span><span>Report Detail</span></div></div><div class="action-row"><button class="ghost-button icon-label" type="button">${icons.upload}<span>Download PDF</span></button><button class="btn btn-primary icon-label" type="button">${icons.messages}<span>Share Report</span></button></div></div>${reportPatientCard()}<section class="report-grid"><article class="panel ecg-panel"><div class="panel-header"><h2>ECG Overview</h2><div class="ecg-toolbar"><button class="ghost-button" type="button">Lead II</button><button class="ghost-button" type="button">25 mm/s</button><button class="icon-button" type="button" aria-label="Expand report">${icons.plus}</button></div></div>${ecgChart()}${ecgStats()}</article><article class="panel interpretation-card"><h2>Interpretation</h2><div class="success-banner">Normal Sinus Rhythm</div><p>No significant ST-T changes.</p><p>Normal ECG.</p><div class="review-block"><span>Reviewed by</span><strong>Dr. Michael Lee</strong><small>May 18, 2024 11:15 AM</small></div></article><article class="panel measurements-card"><h2>Measurements</h2>${measurementsTable()}</article><article class="panel summary-card"><h2>Report Summary</h2>${reportSummary()}</article></section><article class="panel previous-card"><div class="panel-header"><h2>Previous Reports</h2><button class="ghost-button" type="button">View All</button></div>${previousReports()}</article></section>`;
   }
 
   function adminView() {
@@ -193,7 +197,7 @@
   }
 
   function reportPatientCard() {
-    return `<article class="patient-report-card"><div class="report-person"><div class="patient-avatar-lg">JS</div><div><h2>John Smith</h2><span class="soft-pill">Male · 45 y/o</span><dl><dt>Patient ID</dt><dd>P-2024-05821</dd><dt>Date of Birth</dt><dd>Apr 12, 1979</dd></dl></div></div><div class="report-meta-grid"><div class="meta-item"><span class="meta-icon">${icons.reports}</span><div><small>Report Type</small><strong>ECG</strong></div></div><div class="meta-item"><span class="meta-icon">${icons.calendar}</span><div><small>Recorded On</small><strong>May 18, 2024 10:30 AM</strong></div></div><div class="meta-item"><span class="meta-icon">${icons.patients}</span><div><small>Recorded By</small><strong>Nurse Olivia</strong></div></div><div class="meta-item"><span class="meta-icon">${icons["patient-summary"]}</span><div><small>Referring Doctor</small><strong>Dr. Michael Lee</strong></div></div><div class="meta-item"><span class="meta-icon">${icons.documents}</span><div><small>Department</small><strong>Cardiology</strong></div></div><div class="meta-item"><span class="meta-icon">${icons.check}</span><div><small>Status</small><strong><span class="status-pill">Completed</span></strong></div></div></div></article>`;
+    return `<article class="patient-report-card"><div class="report-person"><div class="patient-avatar-lg">JS</div><div><h2>John Smith</h2><span class="soft-pill">Male - 45 y/o</span><dl><dt>Patient ID</dt><dd>P-2024-05821</dd><dt>Date of Birth</dt><dd>Apr 12, 1979</dd></dl></div></div><div class="report-meta-grid"><div class="meta-item"><span class="meta-icon">${icons.reports}</span><div><small>Report Type</small><strong>ECG</strong></div></div><div class="meta-item"><span class="meta-icon">${icons.calendar}</span><div><small>Recorded On</small><strong>May 18, 2024 10:30 AM</strong></div></div><div class="meta-item"><span class="meta-icon">${icons.patients}</span><div><small>Recorded By</small><strong>Nurse Olivia</strong></div></div><div class="meta-item"><span class="meta-icon">${icons["patient-summary"]}</span><div><small>Referring Doctor</small><strong>Dr. Michael Lee</strong></div></div><div class="meta-item"><span class="meta-icon">${icons.documents}</span><div><small>Department</small><strong>Cardiology</strong></div></div><div class="meta-item"><span class="meta-icon">${icons.check}</span><div><small>Status</small><strong><span class="status-pill">Completed</span></strong></div></div></div></article>`;
   }
 
   function ecgChart() {
@@ -201,7 +205,7 @@
   }
 
   function ecgStats() {
-    const stats = [["Heart Rate", "72", "bpm"], ["PR Interval", "160", "ms"], ["QRS Duration", "92", "ms"], ["QT / QTc", "360 / 395", "ms"], ["P Axis", "56°", ""], ["QRS Axis", "34°", ""], ["T Axis", "48°", ""]];
+    const stats = [["Heart Rate", "72", "bpm"], ["PR Interval", "160", "ms"], ["QRS Duration", "92", "ms"], ["QT / QTc", "360 / 395", "ms"], ["P Axis", "56 deg", ""], ["QRS Axis", "34 deg", ""], ["T Axis", "48 deg", ""]];
     return `<div class="ecg-metrics">${stats.map(([label, value, unit]) => `<div class="ecg-stat"><span>${label}</span><strong>${value}</strong><small>${unit}</small></div>`).join("")}</div>`;
   }
 
@@ -219,37 +223,29 @@
   }
 
   function appointmentList() {
-    return `<div class="timeline"><button type="button" data-action="select-patient" data-patient="jane"><span>09:00</span><strong>Jane Sample</strong><small>Room 2 · Office Visit</small></button><button type="button" data-action="select-patient" data-patient="john"><span>10:15</span><strong>John Appleseed</strong><small>Room 4 · Follow-up</small></button><button type="button"><span>13:30</span><strong>Care conference</strong><small>Telehealth · Team</small></button></div>`;
+    return `<div class="timeline"><button type="button" data-action="select-patient" data-patient="jane"><span>09:00</span><strong>Jane Sample</strong><small>Room 2 - Office Visit</small></button><button type="button" data-action="select-patient" data-patient="john"><span>10:15</span><strong>John Appleseed</strong><small>Room 4 - Follow-up</small></button><button type="button"><span>13:30</span><strong>Care conference</strong><small>Telehealth - Team</small></button></div>`;
   }
 
   function clinicalSignal(label, value, detail, tone) {
     return `<article class="signal-card ${tone}"><span>${label}</span><strong>${value}</strong><small>${detail}</small></article>`;
   }
 
-  function metric(label, value, detail, icon) {
-    return `<article class="metric-card"><div class="metric-top"><span>${label}</span><span class="metric-icon">${icon || ""}</span></div><strong>${value}</strong><small>${detail}</small></article>`;
+  function futureKpi(label, value, detail, icon) {
+    return `<article class="future-kpi"><span class="metric-icon">${icon}</span><div><small>${label}</small><strong>${value}</strong><em>${detail}</em></div></article>`;
   }
 
-  function emptyPatientView() {
-    return `<section class="empty-state"><h1>No patient selected</h1><p>Select a patient to explore chart workflows.</p><button class="btn btn-primary icon-label" type="button" data-action="go" data-view="patients">${icons.search}<span>Find patient</span></button></section>`;
+  function dashboardRangeControl() {
+    return `<div class="range-control">${["day", "week", "month"].map((range) => `<button class="${state.dashboardRange === range ? "active" : ""}" type="button" data-action="set-dashboard-range" data-range="${range}">${range}</button>`).join("")}</div>`;
   }
 
-  function environmentLabel(value) {
-    if (value === "production") return "Production preview";
-    if (value === "preview") return "Preview deploy";
-    if (value === "development") return "Development";
-    return "Local build";
+  function dashboardRangeData() {
+    const ranges = {
+      day: { values: [18, 24, 31, 27, 36, 44, 39], labels: ["7a", "9a", "11a", "1p", "3p", "5p", "7p"], peak: "44", capacity: "82%", risk: "7" },
+      week: { values: [72, 88, 96, 84, 110, 124, 102], labels: ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"], peak: "124", capacity: "76%", risk: "18" },
+      month: { values: [260, 310, 288, 344, 372, 420, 390], labels: ["W1", "W2", "W3", "W4", "W5", "W6", "W7"], peak: "420", capacity: "71%", risk: "42" }
+    };
+    return ranges[state.dashboardRange] || ranges.day;
   }
 
-  function escapeHtml(value) {
-    return String(value).replace(/[&<>"']/g, function (match) {
-      return ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" })[match];
-    });
-  }
-
-  function getNode(id) {
-    const node = document.getElementById(id);
-    if (!node) throw new Error("Missing required element: #" + id);
-    return node;
-  }
-})();
+  function dashboardFlowChart() {
+    const data = dashboardRangeData
