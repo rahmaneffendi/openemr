@@ -1,22 +1,22 @@
 :root {
   color-scheme: light;
-  --bg: #f3f5f7;
+  --bg: #f4f8ff;
   --surface: #ffffff;
-  --surface-soft: #f7f8fa;
-  --surface-tint: #e8f2f0;
-  --ink: #17202a;
-  --muted: #64717f;
-  --line: #dce2e8;
-  --line-strong: #c7d0d9;
-  --primary: #176c64;
-  --primary-dark: #0f554f;
-  --accent: #526b7a;
+  --surface-soft: #f7fbff;
+  --surface-tint: #edf5ff;
+  --ink: #111827;
+  --muted: #637083;
+  --line: #d8e5f8;
+  --line-strong: #b9cff0;
+  --primary: #2f6df6;
+  --primary-dark: #1f55d9;
+  --accent: #6a8dff;
   --warning: #b45309;
-  --success: #198754;
+  --success: #2563eb;
   --danger: #b42318;
-  --glass: rgba(255, 255, 255, 0.78);
-  --glass-blue: rgba(247, 248, 250, 0.78);
-  --shadow: 0 18px 42px rgba(23, 32, 42, 0.08);
+  --glass: rgba(255, 255, 255, 0.72);
+  --glass-blue: rgba(238, 245, 255, 0.78);
+  --shadow: 0 22px 56px rgba(47, 109, 246, 0.12);
   --radius: 8px;
   font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif;
 }
@@ -75,7 +75,9 @@ svg {
   place-items: center;
   padding: clamp(18px, 4vw, 48px);
   background:
-    linear-gradient(180deg, #f9fafb 0%, #edf1f4 100%);
+    radial-gradient(circle at 18% 12%, rgba(47, 109, 246, 0.16), transparent 30%),
+    radial-gradient(circle at 86% 8%, rgba(106, 141, 255, 0.18), transparent 28%),
+    linear-gradient(180deg, #ffffff 0%, #eef5ff 100%);
 }
 
 .login-shell {
@@ -85,14 +87,15 @@ svg {
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  background: var(--surface);
+  background: rgba(255, 255, 255, 0.76);
   box-shadow: var(--shadow);
+  backdrop-filter: blur(22px);
 }
 
 .login-card {
   padding: clamp(28px, 4vw, 44px);
   border-right: 1px solid var(--line);
-  background: var(--surface);
+  background: rgba(255, 255, 255, 0.84);
 }
 
 .login-brand {
@@ -275,7 +278,7 @@ form label:first-child {
   gap: 22px;
   padding: clamp(28px, 4vw, 44px);
   background:
-    linear-gradient(180deg, rgba(245, 248, 248, 0.95), rgba(250, 251, 252, 0.98)),
+    linear-gradient(180deg, rgba(238, 245, 255, 0.9), rgba(248, 251, 255, 0.96)),
     var(--surface-soft);
 }
 
