@@ -4,8 +4,8 @@
   const environment = config.deploymentEnvironment || "local";
   const backendUrl = config.backendUrl || "";
   const patients = {
-    jane: { id: "jane", name: "Jane Sample", dob: "1984-04-16", age: 42, pid: "1001", phone: "(555) 221-4412", provider: "Dr. Smith", risk: "Medium", balance: "$42.00" },
-    john: { id: "john", name: "John Appleseed", dob: "1979-11-02", age: 46, pid: "1002", phone: "(555) 991-0101", provider: "Dr. Miller", risk: "Low", balance: "$0.00" }
+    jane: { id: "jane", name: "Maya Hartono", dob: "1984-04-16", age: 42, pid: "1001", phone: "(555) 221-4412", provider: "Dr. Singh", risk: "Medium", balance: "$42.00" },
+    john: { id: "john", name: "Daniel Brooks", dob: "1979-11-02", age: 46, pid: "1002", phone: "(555) 991-0101", provider: "Dr. Miller", risk: "Low", balance: "$0.00" }
   };
   const navItems = [
     ["dashboard", "Dashboard"],
@@ -63,13 +63,13 @@
       <aside class="sidebar">
         <div class="sidebar-brand"><img src="/assets/menu-logo.svg" alt="${escapeHtml(appName)}"><span>${escapeHtml(appName)}</span></div>
         <nav class="side-nav" id="side-nav">${navItems.map(([id, label]) => `<button class="side-link ${isActiveNav(id) ? "active" : ""}" type="button" data-action="go" data-view="${id}"><span class="side-icon">${icons[id]}</span><span>${label}</span></button>`).join("")}</nav>
-        <div class="sidebar-footer"><strong>${environmentLabel(environment)}</strong><span>${backendUrl ? "Backend connected" : "Static Vercel demo"}</span></div>
+        <div class="sidebar-footer"><strong>${environmentLabel(environment)}</strong><span>${backendUrl ? "Backend connected" : "Sample data preview"}</span></div>
       </aside>
       <section class="workspace">
         <header class="topbar">
           <button class="icon-button menu-button" type="button" data-action="toggle-menu" aria-label="Open navigation" title="Open navigation">${icons.menu}</button>
           <form id="global-search-form" class="search-form">
-            <div class="search-wrap"><span class="search-icon">${icons.search}</span><input class="form-control" type="search" placeholder="Search patients, visits, claims"></div>
+            <div class="search-wrap"><span class="search-icon">${icons.search}</span><input class="form-control" type="search" placeholder="Search patient, visit, claim, or document"></div>
           </form>
           <button class="ghost-button icon-label message-button" type="button" data-action="go" data-view="messages">${icons.messages}<span class="button-text">Inbox</span></button>
           <div class="user-chip"><span class="avatar">AD</span><span>Administrator</span></div>
@@ -149,11 +149,11 @@
   }
 
   function dashboardView() {
-    return `<section class="future-dashboard"><div class="future-hero"><div><span class="eyebrow">Clinical operations</span><h1>Care intelligence hub</h1><p>Live capacity, patient risk, appointments, and revenue signals in one blue-glass workspace.</p></div><div class="hero-orbit" aria-hidden="true"><span></span><strong>94%</strong><small>system flow</small></div></div><section class="dashboard-kpis">${futureKpi("Patient flow", "32", "+12% vs avg", icons.patients)}${futureKpi("Queue time", "14m", "-6m today", icons.calendar)}${futureKpi("Care gaps", "7", "3 high priority", icons.reports)}${futureKpi("Clean claims", "72%", "+8% week", icons.billing)}</section><section class="future-grid"><article class="panel command-chart"><div class="panel-header"><div><h2>Predictive patient flow</h2><span class="panel-subtitle">Interactive forecast by time window</span></div>${dashboardRangeControl()}</div>${dashboardFlowChart()}<div class="chart-insights"><span><strong>${dashboardRangeData().peak}</strong> projected peak</span><span><strong>${dashboardRangeData().capacity}</strong> capacity load</span><span><strong>${dashboardRangeData().risk}</strong> risk alerts</span></div></article><article class="panel ai-panel"><div class="panel-header"><div><h2>Clinical signals</h2><span class="panel-subtitle">Prioritized by urgency</span></div></div><ul class="ai-list"><li><span class="ai-score">91</span><div><strong>Lab follow-up ready</strong><small>Jane Sample needs provider review before 11:30.</small></div></li><li><span class="ai-score">76</span><div><strong>Schedule compression</strong><small>Room 2 likely runs 18 minutes late after 10:15.</small></div></li><li><span class="ai-score">64</span><div><strong>Billing review</strong><small>Two claims can be cleared with diagnosis confirmation.</small></div></li></ul></article><article class="panel flow-lane"><div class="panel-header"><h2>Today timeline</h2><button class="ghost-button icon-label" data-action="go" data-view="calendar" type="button">${icons.calendar}<span>Schedule</span></button></div><div class="lane-list"><button type="button" data-action="select-patient" data-patient="jane"><time>09:00</time><strong>Jane Sample</strong><span>Room 2 - Office visit</span></button><button type="button" data-action="select-patient" data-patient="john"><time>10:15</time><strong>John Appleseed</strong><span>Room 4 - Follow-up</span></button><button type="button"><time>13:30</time><strong>Care conference</strong><span>Telehealth - Team</span></button></div></article><article class="panel revenue-pulse"><div class="panel-header"><div><h2>Revenue pulse</h2><span class="panel-subtitle">Claims and payment health</span></div></div>${claimsDonutChart()}</article></section></section>`;
+    return `<section class="future-dashboard"><div class="future-hero"><div><span class="eyebrow">Clinic operations</span><h1>Morning worklist</h1><p>Appointments, open chart tasks, messages, and claims that need staff attention today.</p></div><div class="hero-orbit" aria-hidden="true"><strong>18</strong><small>items due today</small></div></div><section class="dashboard-kpis">${futureKpi("Scheduled visits", "32", "8 checked in", icons.patients)}${futureKpi("Average wait", "14m", "front desk estimate", icons.calendar)}${futureKpi("Open chart tasks", "7", "3 need provider review", icons.reports)}${futureKpi("Claims ready", "72%", "clean claim rate", icons.billing)}</section><section class="future-grid"><article class="panel command-chart"><div class="panel-header"><div><h2>Patient flow</h2><span class="panel-subtitle">Visits by selected time window</span></div>${dashboardRangeControl()}</div>${dashboardFlowChart()}<div class="chart-insights"><span><strong>${dashboardRangeData().peak}</strong> busiest slot</span><span><strong>${dashboardRangeData().capacity}</strong> room use</span><span><strong>${dashboardRangeData().risk}</strong> open tasks</span></div></article><article class="panel ai-panel"><div class="panel-header"><div><h2>Work queue</h2><span class="panel-subtitle">Items waiting for a person</span></div></div><ul class="ai-list"><li><span class="ai-score">1</span><div><strong>Lab result to review</strong><small>Maya Hartono has a result waiting for Dr. Singh.</small></div></li><li><span class="ai-score">2</span><div><strong>Room 2 may run late</strong><small>The 10:15 visit has not started; front desk can update the patient.</small></div></li><li><span class="ai-score">3</span><div><strong>Diagnosis needed on claim</strong><small>Two claims are missing a final diagnosis confirmation.</small></div></li></ul></article><article class="panel flow-lane"><div class="panel-header"><h2>Today timeline</h2><button class="ghost-button icon-label" data-action="go" data-view="calendar" type="button">${icons.calendar}<span>Schedule</span></button></div><div class="lane-list"><button type="button" data-action="select-patient" data-patient="jane"><time>09:00</time><strong>Maya Hartono</strong><span>Room 2 - Office visit</span></button><button type="button" data-action="select-patient" data-patient="john"><time>10:15</time><strong>Daniel Brooks</strong><span>Room 4 - Follow-up</span></button><button type="button"><time>13:30</time><strong>Care conference</strong><span>Telehealth - Team</span></button></div></article><article class="panel revenue-pulse"><div class="panel-header"><div><h2>Claims status</h2><span class="panel-subtitle">Billing work in progress</span></div></div>${claimsDonutChart()}</article></section></section>`;
   }
 
   function calendarView() {
-    return `<div class="page-title"><div><span class="eyebrow">Schedule</span><h1>Calendar</h1></div><button class="btn btn-primary icon-label" type="button">${icons.plus}<span>New appointment</span></button></div><section class="calendar-modern">${["Mon", "Tue", "Wed", "Thu", "Fri"].map((day, index) => `<article class="day-column"><h2>${day}</h2><button class="appointment-card" type="button" data-action="select-patient" data-patient="${index % 2 ? "john" : "jane"}"><span>${9 + index}:00 AM</span><strong>${index % 2 ? "John Appleseed" : "Jane Sample"}</strong><small>Office visit</small></button><button class="appointment-card muted" type="button"><span>1:30 PM</span><strong>Follow-up</strong><small>Room ${index + 1}</small></button></article>`).join("")}</section>`;
+    return `<div class="page-title"><div><span class="eyebrow">Schedule</span><h1>Calendar</h1></div><button class="btn btn-primary icon-label" type="button">${icons.plus}<span>New appointment</span></button></div><section class="calendar-modern">${["Mon", "Tue", "Wed", "Thu", "Fri"].map((day, index) => `<article class="day-column"><h2>${day}</h2><button class="appointment-card" type="button" data-action="select-patient" data-patient="${index % 2 ? "john" : "jane"}"><span>${9 + index}:00 AM</span><strong>${index % 2 ? "Daniel Brooks" : "Maya Hartono"}</strong><small>Office visit</small></button><button class="appointment-card muted" type="button"><span>1:30 PM</span><strong>Follow-up</strong><small>Room ${index + 1}</small></button></article>`).join("")}</section>`;
   }
 
   function patientsView() {
@@ -173,7 +173,7 @@
   }
 
   function billingView(patient) {
-    return `<div class="page-title"><div><span class="eyebrow">Revenue cycle</span><h1>Billing</h1></div><button class="btn btn-primary icon-label" type="button">${icons.plus}<span>Post payment</span></button></div><section class="panel"><table class="data-table"><thead><tr><th>Date</th><th>Patient</th><th>Code</th><th>Description</th><th>Amount</th></tr></thead><tbody><tr><td>2026-06-20</td><td>${patient ? patient.name : "Jane Sample"}</td><td>99213</td><td>Office outpatient visit</td><td>$125.00</td></tr><tr><td>2026-06-20</td><td>${patient ? patient.name : "Jane Sample"}</td><td>81002</td><td>Urinalysis</td><td>$18.00</td></tr></tbody></table></section>`;
+    return `<div class="page-title"><div><span class="eyebrow">Revenue cycle</span><h1>Billing</h1></div><button class="btn btn-primary icon-label" type="button">${icons.plus}<span>Post payment</span></button></div><section class="panel"><table class="data-table"><thead><tr><th>Date</th><th>Patient</th><th>Code</th><th>Description</th><th>Amount</th></tr></thead><tbody><tr><td>2026-06-20</td><td>${patient ? patient.name : "Maya Hartono"}</td><td>99213</td><td>Office outpatient visit</td><td>$125.00</td></tr><tr><td>2026-06-20</td><td>${patient ? patient.name : "Maya Hartono"}</td><td>81002</td><td>Urinalysis</td><td>$18.00</td></tr></tbody></table></section>`;
   }
 
   function reportsView() {
@@ -185,7 +185,7 @@
   }
 
   function messagesView() {
-    return `<div class="page-title"><div><span class="eyebrow">Inbox</span><h1>Messages</h1></div><button class="btn btn-primary icon-label" type="button">${icons.plus}<span>Compose</span></button></div><section class="dashboard-grid"><article class="panel"><h2>Patient reminder</h2><p>Jane Sample needs lab follow-up review.</p><button class="ghost-button icon-label" type="button">${icons.messages}<span>Open</span></button></article><article class="panel"><h2>Portal message</h2><p>John Appleseed requested appointment confirmation.</p><button class="ghost-button icon-label" type="button">${icons.messages}<span>Open</span></button></article></section>`;
+    return `<div class="page-title"><div><span class="eyebrow">Inbox</span><h1>Messages</h1></div><button class="btn btn-primary icon-label" type="button">${icons.plus}<span>Compose</span></button></div><section class="dashboard-grid"><article class="panel"><h2>Patient reminder</h2><p>Maya Hartono needs lab follow-up review.</p><button class="ghost-button icon-label" type="button">${icons.messages}<span>Open</span></button></article><article class="panel"><h2>Portal message</h2><p>Daniel Brooks requested appointment confirmation.</p><button class="ghost-button icon-label" type="button">${icons.messages}<span>Open</span></button></article></section>`;
   }
 
   function visitTrendChart() {
@@ -223,7 +223,7 @@
   }
 
   function appointmentList() {
-    return `<div class="timeline"><button type="button" data-action="select-patient" data-patient="jane"><span>09:00</span><strong>Jane Sample</strong><small>Room 2 - Office Visit</small></button><button type="button" data-action="select-patient" data-patient="john"><span>10:15</span><strong>John Appleseed</strong><small>Room 4 - Follow-up</small></button><button type="button"><span>13:30</span><strong>Care conference</strong><small>Telehealth - Team</small></button></div>`;
+    return `<div class="timeline"><button type="button" data-action="select-patient" data-patient="jane"><span>09:00</span><strong>Maya Hartono</strong><small>Room 2 - Office Visit</small></button><button type="button" data-action="select-patient" data-patient="john"><span>10:15</span><strong>Daniel Brooks</strong><small>Room 4 - Follow-up</small></button><button type="button"><span>13:30</span><strong>Care conference</strong><small>Telehealth - Team</small></button></div>`;
   }
 
   function clinicalSignal(label, value, detail, tone) {
@@ -257,7 +257,7 @@
     });
     const line = points.map(([x, y], index) => `${index === 0 ? "M" : "L"}${x} ${y}`).join(" ");
     const area = `${line} L392 188 L28 188 Z`;
-    return `<div class="future-chart"><svg viewBox="0 0 420 210" role="img" aria-label="Interactive patient flow forecast"><path class="chart-grid-line" d="M28 168H392M28 128H392M28 88H392M28 48H392"/><path class="future-chart-area" d="${area}"/><path class="future-chart-line" d="${line}"/><g>${points.map(([x, y], index) => `<circle cx="${x}" cy="${y}" r="${index === points.length - 1 ? 5 : 4}"/>`).join("")}</g></svg><div class="chart-labels">${data.labels.map((label) => `<span>${label}</span>`).join("")}</div></div>`;
+    return `<div class="future-chart"><svg viewBox="0 0 420 210" role="img" aria-label="Patient flow chart"><path class="chart-grid-line" d="M28 168H392M28 128H392M28 88H392M28 48H392"/><path class="future-chart-area" d="${area}"/><path class="future-chart-line" d="${line}"/><g>${points.map(([x, y], index) => `<circle cx="${x}" cy="${y}" r="${index === points.length - 1 ? 5 : 4}"/>`).join("")}</g></svg><div class="chart-labels">${data.labels.map((label) => `<span>${label}</span>`).join("")}</div></div>`;
   }
 
   function metric(label, value, detail, icon) {
