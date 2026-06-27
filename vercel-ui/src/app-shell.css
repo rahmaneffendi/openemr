@@ -28,8 +28,9 @@
 }
 
 .sidebar-brand img {
-  width: 30px;
-  height: 30px;
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
 }
 
 .sidebar-brand span {
@@ -744,6 +745,13 @@
   color: #2f6df6;
   font-size: 30px;
   font-weight: 900;
+  overflow: hidden;
+}
+
+.patient-avatar-lg img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 .report-person h2 {

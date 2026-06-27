@@ -56,7 +56,7 @@ function normalizeBackendUrl(value) {
 }
 
 const config = {
-  appName: process.env.OPENEMR_APP_NAME || "OpenEMR",
+  appName: process.env.OPENEMR_APP_NAME || "MediEMR",
   backendUrl: normalizeBackendUrl(process.env.OPENEMR_BACKEND_URL),
   deploymentEnvironment: process.env.VERCEL_ENV || "local",
   builtAt: new Date().toISOString()
